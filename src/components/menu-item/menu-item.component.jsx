@@ -1,5 +1,5 @@
 import React from "react";
-import { withRouter } from "react-router";
+import { withRouter } from "react-router";  //withRouter is a higher order component its take a function as a argument and return a modified component/power-up component
 import './menu-item.style.scss';
 
 
