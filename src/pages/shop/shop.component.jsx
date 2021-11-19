@@ -2,7 +2,6 @@
 import React from "react";
 import './shop.data.js'
 import SHOP_DATA from "./shop.data.js";
-// import CollectionPreviews from '../../components/preview-collection/collection-preview'
 import CollectionPreviews from "../../components/preview-collection/collection-preview";
 
 
