@@ -1,12 +1,10 @@
 import React from "react";
+import SignIn from "../../components/sign-in/sign-in.component";
 import "./sign-in-sign-up.style.scss";
 
-class SignIn extends React.Component{
-   constructor(props) {
-      super(props);
-      this.state = {
-         email: '',
-         password:''
-      }
-   }
-}
+const SignInAndSignUpPage = () => (
+   <div className=' sign-in-and-sing-up'>
+    <SignIn/>
+  </div>
+)
+export default SignInAndSignUpPage;
