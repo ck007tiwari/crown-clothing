@@ -6,7 +6,7 @@ import Header from './components/header/header.component';
 import SignInAndSignUpPage from "./pages/sign-in-sign-up/sign-in-sign-up.component";
 // import test from './testState';
 import './App.css';
-import {auth} from './firebase/firebase.utils';
+import { auth, createUserProfileDocument } from "./firebase/firebase.utils";
 
 class App extends React.Component {
   // using class to define the state so that we can store  or know who's is
@@ -22,14 +22,32 @@ class App extends React.Component {
   // mountiong of a react component its Unmounting. Mount/Mounting  - means birth
   // of your component Unmount - means death of your component Update  - means
   // groth of your component unsubscribeFromAuth;
-  
+
   unsubscribeFromAuth = null;
 
   //componentDidMothis function is telling the user is logged in or not
   componentDidMount() {
-    this.unsubscribeFromAuth = auth.onAuthStateChanged((user) => {
-      this.setState({currentUser: user});
-      console.log(user);
+    this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
+      if (userAuth) {
+        const userRef = await createUserProfileDocument(userAuth);
+
+        userRef.onSnapshot(snapShot => {
+          this.setState({
+            currentUser: {
+              id: snapShot.id,
+              ...snapShot.data()
+            }
+          }, () => {
+            console.log("printing the State", this.state);
+          })
+        })
+        
+      } else {
+        this.setState({ currentUser: userAuth });
+      }
+      // createUserProfileDocument(user);
+      // this.setState({currentUser: user});
+      // console.log(user);
     });
   }
 

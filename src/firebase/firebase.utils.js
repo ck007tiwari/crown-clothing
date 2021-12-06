@@ -15,10 +15,36 @@ const config = {
   appId: "1:105050875214:web:a2e52d7a7b895b4b8c2a1f",
   measurementId: "G-V0FCCZ7VXV",
 };
+export const createUserProfileDocument = async (userAuth, additionalData) => {
+  if (!userAuth) return;
+
+  // const userRef = firestore.doc('users/jsakdfjads')
+  const userRef = firestore.doc(`users/${userAuth.uid}`);
+  const snapshot = await userRef.get();
+
+  if (!snapshot.exists) {
+    const { displayName, email } = userAuth;
+    const createdAt = new Date();
+
+    try {
+      await userRef.set({
+        displayName,
+        email,
+        createdAt,
+        ...additionalData
+      })
+    } catch (error) {
+      console.log('error creating user', error.message);
+    }
+  }
+  // console.log(userRef);
+  return userRef;
+
+ }
 
 firebase.initializeApp(config); // passing the above object as argument 
 export const auth = firebase.auth(); //this is the imported auth method 
-export const forestore = firebase.firestore(); // this is the imported storage method.  
+export const firestore = firebase.firestore(); // this is the imported storage method.  
 
 const provider = new firebase.auth.GoogleAuthProvider(); //this will give the access to new GoogleAuthProvider class from the authintation library.
 
