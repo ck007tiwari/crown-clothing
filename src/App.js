@@ -1,5 +1,5 @@
 import React from 'react';
-import {Switch, Route} from "react-router-dom"; // used for routing the pages
+import {Switch, Route, Redirect} from "react-router-dom"; // used for routing the pages
 import ShopPage from './pages/shop/shop.component';
 import {connect} from 'react-redux';
 import HomePage from './pages/homepage/homepage.component';
@@ -10,11 +10,9 @@ import './App.css';
 import {auth, createUserProfileDocument} from "./firebase/firebase.utils";
 import {setCurrentUser} from './redux/user/user.action'
 class App extends React.Component {
-  // using class to define the state so that we can store  or know who's is
-  // loged-in. React Component LifeCyle Methods - The series of events that
-  // happens from the mountiong of a react component its Unmounting.
-  // Mount/Mounting  - means birth of your component Unmount - means death of your
-  // component Update  - means groth of your component unsubscribeFromAuth;
+  // using class to define the state so that we can store  or know who's is loged-in. 
+  
+  // React Component LifeCyle Methods - The series of events that happens from the mountiong of a react component its Unmounting. Mount/Mounting  - means birth of your component Unmount - means death of your component Update  - means groth of your component unsubscribeFromAuth;
 
   unsubscribeFromAuth = null;
 
@@ -52,14 +50,21 @@ class App extends React.Component {
         <Switch>
           <Route exact path="/" component={HomePage}/>
           <Route path="/shop" component={ShopPage}/>
-          <Route path="/signin" component={SignInAndSignUpPage}/>
+          <Route
+            exact
+            path="/signin"
+            rednder={() => this.props.currentUser
+            ? (<Redirect to='/'/>)
+            : (<SignInAndSignUpPage/>)}/>
         </Switch>
       </div>
     );
   }
 }
 
+const mapStateToProps = ({ user }) => ({ currentUser: user.currentUser });
+//dispatch is just way for redux to know that whatever u passed to me i am going to send to action, means return an action object 
 const mapDispatchToProps = dispatch => ({
   setCurrentUser: user => dispatch(setCurrentUser(user))
 })
-export default connect(null, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);
