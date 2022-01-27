@@ -18,7 +18,7 @@ class App extends React.Component {
 
   //componentDidMothis function is telling the user is logged in or not
   componentDidMount() {
-    const {setCurrentUser} = this.props
+    const { setCurrentUser } = this.props;
     this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
       if (userAuth) {
         const userRef = await createUserProfileDocument(userAuth);
@@ -53,7 +53,7 @@ class App extends React.Component {
           <Route
             exact
             path="/signin"
-            rednder={() => this.props.currentUser
+            render={() => this.props.currentUser
             ? (<Redirect to='/'/>)
             : (<SignInAndSignUpPage/>)}/>
         </Switch>

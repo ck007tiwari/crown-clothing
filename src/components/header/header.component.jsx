@@ -33,6 +33,7 @@ const Header = ({currentUser}) => (
     </div>
   </div>
 );
+ 
 const mapStateToProps = state => ({currnetUser: state.user.currentUser}); //here tha state is the top level root reducer 
 
 export default connect(mapStateToProps)(Header); //here we are passing 2 functions 2nd one is optional and both connected by connect function which is higher order function. mapStateToProps is our frist argument of the function.
