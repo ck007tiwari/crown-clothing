@@ -1,39 +1,45 @@
-import React from "react";
-import {Link} from 'react-router-dom';
-import {ReactComponent as Logo} from '../../assets/crown.svg'; //svg should be imported like this
-import {auth} from "../../firebase/firebase.utils";
-import {connect} from 'react-redux'; //here we want to take our currentUser value from reducer not from anywere else thats why importing. connect it's a higher order function.
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+
+import { auth } from '../../firebase/firebase.utils';
+import CartIcon from '../cart-icon/cart-icon.component';
+import CartDropdown from '../cart-dropdown/cart-dropdown.component';
+
+import { ReactComponent as Logo } from '../../assets/crown.svg';
+
 import './header.styles.scss';
 
-const Header = ({currentUser}) => (
-  <div className="header">
-    {/* {console.log(currentUser)} */}
-    <Link className="logo-container" to="/">
-      {/*logo will redirect to home page */}
-      <Logo className="logo"/>
+const Header = ({ currentUser, hidden }) => (
+  <div className='header'>
+    <Link className='logo-container' to='/'>
+      <Logo className='logo' />
     </Link>
-
-    <div className="options">
-      <Link className="option" to="/shop">
+    <div className='options'>
+      <Link className='option' to='/shop'>
         SHOP
       </Link>
-      <Link className="option" to="/shop">
+      <Link className='option' to='/shop'>
         CONTACT
       </Link>
-
-      {currentUser
-        ? (
-          <div className="option" onClick={() => auth.signOut()}>SIGN OUT</div>
-        )
-        : (
-          <Link className="option" to="/signin">SIGN IN</Link>
-        )
-}
-
+      {currentUser ? (
+        <div className='option' onClick={() => auth.signOut()}>
+          SIGN OUT
+        </div>
+      ) : (
+        <Link className='option' to='/signin'>
+          SIGN IN
+        </Link>
+      )}
+      <CartIcon />
     </div>
+    {hidden ? null : <CartDropdown />}
   </div>
 );
- 
-const mapStateToProps = state => ({currnetUser: state.user.currentUser}); //here tha state is the top level root reducer 
 
-export default connect(mapStateToProps)(Header); //here we are passing 2 functions 2nd one is optional and both connected by connect function which is higher order function. mapStateToProps is our frist argument of the function.
+const mapStateToProps = ({ user: { currentUser }, cart: { hidden } }) => ({
+  currentUser,
+  hidden
+});
+
+export default connect(mapStateToProps)(Header);

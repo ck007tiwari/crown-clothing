@@ -5,7 +5,6 @@ import "firebase/compat/firestore";
 import "firebase/compat/auth";
 //importing for auth
 
-
 const config = {
   apiKey: "AIzaSyAd6PqA5AMoErMtM_T5GjKGNebV8Ul-jEo",
   authDomain: "crown-db-007.firebaseapp.com",
@@ -31,25 +30,24 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
         displayName,
         email,
         createdAt,
-        ...additionalData
-      })
+        ...additionalData,
+      });
     } catch (error) {
-      console.log('error creating user', error.message);
+      console.log("error creating user", error.message);
     }
   }
   // console.log(userRef);
   return userRef;
+};
 
- }
-
-firebase.initializeApp(config); // passing the above object as argument 
-export const auth = firebase.auth(); //this is the imported auth method 
-export const firestore = firebase.firestore(); // this is the imported storage method.  
+firebase.initializeApp(config); // passing the above object as argument
+export const auth = firebase.auth(); //this is the imported auth method
+export const firestore = firebase.firestore(); // this is the imported storage method.
 
 const provider = new firebase.auth.GoogleAuthProvider(); //this will give the access to new GoogleAuthProvider class from the authintation library.
 
-provider.setCustomParameters({ prompt: 'select_account' }) // using this method which take some custome parameter and thsi will always trigger google popup when ever we use the abaove GoogleAuthProvider method.
+provider.setCustomParameters({ prompt: "select_account" }); // using this method which take some custome parameter and thsi will always trigger google popup when ever we use the abaove GoogleAuthProvider method.
 
 export const signInWithGoogle = () => auth.signInWithPopup(provider); //here we are signing in with the GoogleOne so we are using hte GoogleOne sign-in method, we can use twitter or facebook etc... and providing the provider as a argument which allow to sing-in using googleOne method
-  
+
 export default firebase; //exporting the firebase whole libray in case if we need somewhere;

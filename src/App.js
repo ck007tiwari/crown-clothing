@@ -1,24 +1,22 @@
 import React from 'react';
-import {Switch, Route, Redirect} from "react-router-dom"; // used for routing the pages
-import ShopPage from './pages/shop/shop.component';
-import {connect} from 'react-redux';
-import HomePage from './pages/homepage/homepage.component';
-import Header from './components/header/header.component';
-import SignInAndSignUpPage from "./pages/sign-in-sign-up/sign-in-sign-up.component";
-// import test from './testState';
-import './App.css';
-import {auth, createUserProfileDocument} from "./firebase/firebase.utils";
-import {setCurrentUser} from './redux/user/user.action'
-class App extends React.Component {
-  // using class to define the state so that we can store  or know who's is loged-in. 
-  
-  // React Component LifeCyle Methods - The series of events that happens from the mountiong of a react component its Unmounting. Mount/Mounting  - means birth of your component Unmount - means death of your component Update  - means groth of your component unsubscribeFromAuth;
+import { Switch, Route, Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
 
+import './App.css';
+
+import HomePage from './pages/homepage/homepage.component';
+import ShopPage from './pages/shop/shop.component';
+import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component';
+import Header from './components/header/header.component';
+import { auth, createUserProfileDocument } from './firebase/firebase.utils';
+import { setCurrentUser } from './redux/user/user.actions';
+
+class App extends React.Component {
   unsubscribeFromAuth = null;
 
-  //componentDidMothis function is telling the user is logged in or not
   componentDidMount() {
     const { setCurrentUser } = this.props;
+
     this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
       if (userAuth) {
         const userRef = await createUserProfileDocument(userAuth);
@@ -29,42 +27,49 @@ class App extends React.Component {
             ...snapShot.data()
           });
         });
-
-      } else {
-        setCurrentUser(userAuth);
       }
-      // createUserProfileDocument(user); this.setState({currentUser: user});
-      // console.log(user);
+
+      setCurrentUser(userAuth);
     });
   }
 
   componentWillUnmount() {
-    //this function make user logged-out by setting the state valure is null
     this.unsubscribeFromAuth();
   }
 
   render() {
     return (
       <div>
-        <Header/>
+        <Header />
         <Switch>
-          <Route exact path="/" component={HomePage}/>
-          <Route path="/shop" component={ShopPage}/>
+          <Route exact path='/' component={HomePage} />
+          <Route path='/shop' component={ShopPage} />
           <Route
             exact
-            path="/signin"
-            render={() => this.props.currentUser
-            ? (<Redirect to='/'/>)
-            : (<SignInAndSignUpPage/>)}/>
+            path='/signin'
+            render={() =>
+              this.props.currentUser ? (
+                <Redirect to='/' />
+              ) : (
+                <SignInAndSignUpPage />
+              )
+            }
+          />
         </Switch>
       </div>
     );
   }
 }
 
-const mapStateToProps = ({ user }) => ({ currentUser: user.currentUser });
-//dispatch is just way for redux to know that whatever u passed to me i am going to send to action, means return an action object 
+const mapStateToProps = ({ user }) => ({
+  currentUser: user.currentUser
+});
+
 const mapDispatchToProps = dispatch => ({
   setCurrentUser: user => dispatch(setCurrentUser(user))
-})
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App);
